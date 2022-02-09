@@ -23,34 +23,29 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\protocol;
 
-#include <rules/DataPacket.h>
-
 use pocketmine\network\mcpe\NetworkSession;
-use pocketmine\network\mcpe\protocol\types\SubChunkPacketHeightMapInfo;
-use pocketmine\network\mcpe\protocol\types\SubChunkPacketHeightMapType;
+use pocketmine\network\mcpe\protocol\types\SubChunkPacketEntryWithCache as EntryWithBlobHash;
+use pocketmine\network\mcpe\protocol\types\SubChunkPacketEntryWithCacheList as ListWithBlobHashes;
+use pocketmine\network\mcpe\protocol\types\SubChunkPacketEntryWithoutCache as EntryWithoutBlobHash;
+use pocketmine\network\mcpe\protocol\types\SubChunkPacketEntryWithoutCacheList as ListWithoutBlobHashes;
+use pocketmine\network\mcpe\protocol\types\SubChunkPosition;
+use function count;
 
 class SubChunkPacket extends DataPacket{
 	public const NETWORK_ID = ProtocolInfo::SUB_CHUNK_PACKET;
 
 	private int $dimension;
-	private int $subChunkX;
-	private int $subChunkY;
-	private int $subChunkZ;
-	private string $data;
-	private int $requestResult;
-	private ?SubChunkPacketHeightMapInfo $heightMapData = null;
-	private ?int $usedBlobHash = null;
+	private SubChunkPosition $baseSubChunkPosition;
+	private ListWithBlobHashes|ListWithoutBlobHashes $entries;
 
-	public static function create(int $dimension, int $subChunkX, int $subChunkY, int $subChunkZ, string $data, int $requestResult, ?SubChunkPacketHeightMapInfo $heightMapData, ?int $usedBlobHash) : self{
+	/**
+	 * @generate-create-func
+	 */
+	public static function create(int $dimension, SubChunkPosition $baseSubChunkPosition, ListWithBlobHashes|ListWithoutBlobHashes $entries) : self{
 		$result = new self;
 		$result->dimension = $dimension;
-		$result->subChunkX = $subChunkX;
-		$result->subChunkY = $subChunkY;
-		$result->subChunkZ = $subChunkZ;
-		$result->data = $data;
-		$result->requestResult = $requestResult;
-		$result->heightMapData = $heightMapData;
-		$result->usedBlobHash = $usedBlobHash;
+		$result->baseSubChunkPosition = $baseSubChunkPosition;
+		$result->entries = $entries;
 		return $result;
 	}
 
