@@ -77,14 +77,18 @@ class LevelChunkPacket extends DataPacket/* implements ClientboundPacket*/{
 		return $this->subChunkCount;
 	}
 
+	public function isClientSubChunkRequestEnabled() : bool{
+	return $this->clientSubChunkRequestsEnabled;
+	}
+
 	public function isCacheEnabled() : bool{
-		return $this->cacheEnabled;
+		return $this->usedBlobHashes !== null;
 	}
 
 	/**
 	 * @return int[]
 	 */
-	public function getUsedBlobHashes() : array{
+	public function getUsedBlobHashes() : ?array{
 		return $this->usedBlobHashes;
 	}
 
